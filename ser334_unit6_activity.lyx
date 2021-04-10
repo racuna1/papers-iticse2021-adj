@@ -1,0 +1,864 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{enumitem}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\branch soln
+\selected 0
+\filename_suffix 0
+\color #ffff7f
+\end_branch
+\branch blank
+\selected 1
+\filename_suffix 0
+\color #55ff7f
+\end_branch
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2.54cm
+\topmargin 2.54cm
+\rightmargin 2.54cm
+\bottommargin 2.54cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\noindent
+Arizona State University
+\begin_inset space \hfill{}
+\end_inset
+
+SER334: Operating Systems
+\end_layout
+
+\begin_layout Standard
+\noindent
+UGTA Lisonbee, Lecturer Acuña
+\begin_inset space \hfill{}
+\end_inset
+
+Revised 10/23/2019
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "100col%"
+height "1pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\size huge
+Module 6 and 7: Threads with Process Synchronization
+\begin_inset Branch soln
+inverted 0
+status collapsed
+
+\begin_layout Standard
+
+\size huge
+\begin_inset Formula $\;$
+\end_inset
+
+(SOLN)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this group activity, we will continue to practice problem solving with
+ the ADJ approach.
+\end_layout
+
+\begin_layout Itemize
+Length: 50 minutes
+\end_layout
+
+\begin_layout Section*
+
+\series bold
+\size larger
+Introduction
+\end_layout
+
+\begin_layout Standard
+As previously discussed, we use the following steps for solving a design
+ problem in SER334: Analysis, Design, and Justification.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Analysis: 
+\series default
+a translation of the original ill-defined problem into concrete requirements
+ that can be evaluated.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Design:
+\series default
+ a solution to the problem being solved.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Justification: 
+\series default
+an argument which supports your design as being superior to other potential
+ designs which also satisfy the analysis requirements.
+\end_layout
+
+\begin_layout Standard
+This time, we will look at a pair of problems involving threading from different
+ perspectives.
+ The first one features a problem that is expressed in the language of a
+ systems developer, where we will focus on 
+\emph on
+analysis
+\emph default
+.
+ The is expressed as a purely algorithmic problem, and an analysis is already
+ provided.
+ For the second problem, you will be asked to produce a 
+\emph on
+design
+\emph default
+: rough pseudocode for a parallel algorithm.
+ This is much tricky than the previous OS structure examples - design here
+ is effectively ad-hoc.
+ This means we will need to have a definition of what a design looks, and
+ metrics to judge designs against one another.
+\end_layout
+
+\begin_layout Section*
+
+\series bold
+\size larger
+K
+\end_layout
+
+\begin_layout Standard
+We now introduce the idea of K.
+ K stands for 
+\series bold
+K
+\series default
+nowledge.
+ K is a set of facts which we take to be the 
+\emph on
+ground truth
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+
+\emph on
+\begin_inset CommandInset href
+LatexCommand href
+target "https://en.wikipedia.org/wiki/Ground_truth"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\emph default
+ for our world
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+If you were working at a company, what more specifically might K represent?
+\end_layout
+
+\end_inset
+
+.
+ For now, take it to be everything you know...
+ and that your group members all agree on.
+ Defining K is an important tool in fighting ambiguity.
+ K is a formal way of representing how the world works, and what is actually
+ known/true.
+ We might say things like 
+\begin_inset Quotes eld
+\end_inset
+
+This problem is founded on K
+\begin_inset Quotes erd
+\end_inset
+
+ to indicate the knowledge needed for a problem to be solved.
+\end_layout
+
+\begin_layout Section*
+Task 0x0 (4 minutes): Getting Started
+\end_layout
+
+\begin_layout Standard
+Start by forming a group of 
+\begin_inset Formula $6\pm1$
+\end_inset
+
+ people, and reading over this document.
+ One member of the group should start a GoogleDoc to submit your answers
+ for for Tasks 0x1 and 0x3 below.
+ It is not expected that answers are proof-read or well formatted, just
+ recorded.
+ Don't make any changes after the end of the class period.
+ The link must be sent to the TA or instructor.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Task 0x1 (15 minutes): Analyzing a Problem
+\end_layout
+
+\begin_layout Standard
+Web servers exist as a means to deliver content over the internet in response
+ to HTTP requests.
+ Given the nature of internet-provided content, anywhere from hundreds to
+ millions of users across the world expect to be able to quickly receive
+ said content at any time of day or night.
+ This lends itself to multi-threading given the highly parallel nature of
+ serving so many individuals at once.
+ Given this background, consider the following situation:
+\end_layout
+
+\begin_layout Standard
+A small startup company is attempting to determine why their web server
+ hosting an online forum and web-IDE is not able to keep up with incoming
+ requests.
+ Both of these services require reading significant amounts of data from
+ disk, and responding to potentially thousands of HTTP requests every minute.
+ These HTTP requests produce responses whose size varies wildly (one response
+ may just be mostly text for a forum post, while others might be large binary
+ executables).
+ The startup's resident system administrator claims that the issues being
+ experienced are due to insufficient 
+\emph on
+balance
+\emph default
+ between threads on their web server, with many threads being overloaded
+ with requests while others lie dormant.
+\end_layout
+
+\begin_layout Standard
+Is the system administrator right in their conclusion? 
+\series bold
+Analyze
+\series default
+ the problem, and from your analysis determine if the sysadmin is right
+ or wrong.
+ Also consider if there are parts of the provided scenario that don't matter,
+ or if there is missing information to solve the problem and include this
+ in your analysis.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Task 0x2 (8 minutes): Analysis Discussion
+\end_layout
+
+\begin_layout Standard
+Several groups will be asked to share their answers to the questions in
+ Task 0x1.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Task 0x3 (15 minutes) : Designing a solution
+\end_layout
+
+\begin_layout Standard
+Consider the following problem statement: 
+\begin_inset Quotes eld
+\end_inset
+
+
+\emph on
+Consider parallelizing the insertion and selection sort algorithms.
+ Which would be more amenable to parallelism? 
+\series bold
+Analyze
+\series default
+ the problem, 
+\series bold
+design
+\series default
+ a choice, and 
+\series bold
+justify
+\series default
+ the choice.
+\emph default
+
+\begin_inset Quotes erd
+\end_inset
+
+ This problem is different than the previous design problem we saw (selecting
+ an OS), because it involves creating an algorithm, rather than selecting
+ a choice from a finite set.
+ 
+\series bold
+See the appendix for an already completed analysis.
+
+\series default
+ Given that someone has already completed the analysis portion of this problem,
+ your group needs to propose a design solution and answer several questions
+ (see below).
+ Skip justification.
+
+\series bold
+ Groups on the east side of the room should do Q1 first, and then Q2 for
+ selection sort.
+ Groups on the west side of the room should do Q2 for insertion sort first,
+ and then Q1.
+\end_layout
+
+\begin_layout Enumerate
+Questions on the 
+\emph on
+analysis
+\emph default
+:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Why did the analysis define the two algorithms?
+\end_layout
+
+\begin_layout Enumerate
+Why did the analysis define the word amenable?
+\end_layout
+
+\begin_layout Enumerate
+Is there anything defined in the analysis that would be fair game to be
+ ground truth defined by K?
+\end_layout
+
+\begin_layout Enumerate
+Is there anything NOT defined in the analysis that would be fair game to
+ be ground truth defined by K?
+\end_layout
+
+\begin_layout Enumerate
+Is the assumption for integer size needed? Why or why not?
+\end_layout
+
+\begin_layout Enumerate
+Is the assumption for known array length needed? Why or why not?
+\end_layout
+
+\begin_layout Enumerate
+Why do the assumptions not discuss things like pthreads, mutexes, or even
+ the number of threads?
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+What is the 
+\emph on
+design
+\emph default
+?
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Task 0x4 (8 minutes): Design Discussion
+\end_layout
+
+\begin_layout Standard
+Several groups will be asked to share their answers to the questions in
+ Task 0x3.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+
+\series bold
+Appendix: Analysis for Sorting Parallelism Problem
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+\bar under
+Problem Definitions and Assumptions
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+To begin, we need to better define the design problem.
+ We choose to define selection sort as shown in Algorithm 1, and insertion
+ sort as shown in Algorithm 2.
+ For abstraction purposes, we have chosen the algorithms to sort arrays
+ of distinct integers with a known length.
+ Distinct integers is not an immediately reasonable assumption, but holds
+ without loss of generality by mapping each element in an arbitrary input
+ to a distinct integer.
+ Known length is a reasonable assumption, since without it, the array may
+ be infinite, and no algorithm will terminate on it.
+\end_layout
+
+\begin_layout Standard
+Both algorithms are stated in the C programming language, and have the same
+ basic form.
+ Each has a parameter named 
+\emph on
+a
+\emph default
+ which indicates the pointer to the address of an array of integers, and
+ a second parameter called 
+\emph on
+N
+\emph default
+ which stores the number of elements in the array.
+ We assume that 
+\begin_inset Formula $N\geq0$
+\end_inset
+
+, that the data in 
+\emph on
+a
+\emph default
+ is contiguous, and that the algorithms are to be used on a platform with
+ integers are 32-bits.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+lstparams "language=Java"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+void selection_sort(int[] a, int N) {       
+\end_layout
+
+\begin_layout Plain Layout
+
+    for (int i = 0; i < N; i++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+        int min = i;
+\end_layout
+
+\begin_layout Plain Layout
+
+        for (int j = i+1; j < N; j++)
+\end_layout
+
+\begin_layout Plain Layout
+
+            if (a[j] < a[min]) min = j;
+\end_layout
+
+\begin_layout Plain Layout
+
+        exch(a, i, min);
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The selection sort algorithm.
+ (Based off of code by Sedgewick.)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+lstparams "language=Java"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+void insertion_sort(int[] a, int N) {       
+\end_layout
+
+\begin_layout Plain Layout
+
+    for (int i = 1; i < N; i++) {
+\end_layout
+
+\begin_layout Plain Layout
+
+        for (int j = i; j > 0 && a[j] < a[j-1]; j--)
+\end_layout
+
+\begin_layout Plain Layout
+
+            exch(a, j, j-1);
+\end_layout
+
+\begin_layout Plain Layout
+
+    }
+\end_layout
+
+\begin_layout Plain Layout
+
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+The insertion sort algorithm.
+ (Based off of code by Sedgewick.)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We also define amenable to mean: provides a faster computation time with
+ parallelism.
+ The algorithm (selection sort or insertion sort) that provides the fast
+ computation time may be said to be the one most amenable.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+\bar under
+The Goal
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+A potential 
+\emph on
+design
+\emph default
+ for this problem would look like the pseudocode for a parallel sorting
+ algorithm based on either selection sort of insertion sort.
+ A particular design must be quantified in terms of computational speed.
+ For a 
+\emph on
+metric
+\emph default
+, we use the number of comparisons and exchanges as a measure of computational
+ time needed for a particular design, expressed with tilde notation.
+ A design is optimal (i.e., more amendable) if it of a lower order than the
+ alternative design.
+\end_layout
+
+\begin_layout Standard
+For a particular design to 
+\emph on
+justified
+\emph default
+, we also need to argue that each of the designs is respectively the fastest
+ possible for that type of algorithm.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+\bar under
+Observations
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Fundamentally, data dependency is what prevents an algorithm from being
+ parallelized.
+ Hence, we need to look at the data access patterns as preparation for designing
+ an algorithm.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Selection Sort:
+\end_layout
+
+\begin_layout Itemize
+The same fixed element 
+\emph on
+i
+\emph default
+ is compared to the set of indices which follows it (
+\begin_inset Formula $j>i$
+\end_inset
+
+).
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The elements in the indices that follow 
+\emph on
+i
+\emph default
+ will change for every different 
+\emph on
+i
+\emph default
+.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Exchanges occur one at a time, and between the element 
+\emph on
+i 
+\emph default
+and some later element 
+\emph on
+j
+\emph default
+ (
+\begin_inset Formula $j\geq i$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Insertion Sort:
+\end_layout
+
+\begin_layout Itemize
+Comparisons occur one at a time, and only between the element 
+\begin_inset Formula $j$
+\end_inset
+
+ and its neighbor 
+\emph on
+
+\begin_inset Formula $j-1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Exchanges occur one at a time, and only between the element 
+\begin_inset Formula $j$
+\end_inset
+
+ and its neighbor 
+\emph on
+
+\begin_inset Formula $j-1$
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Exchanges are only dependent on both the values of 
+\begin_inset Formula $j$
+\end_inset
+
+ and its neighbor 
+\emph on
+
+\begin_inset Formula $j-1$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\end_deeper
+\end_body
+\end_document

@@ -1,0 +1,787 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\branch soln
+\selected 0
+\filename_suffix 0
+\color #ffff7f
+\end_branch
+\branch blank
+\selected 1
+\filename_suffix 0
+\color #55ff7f
+\end_branch
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2.54cm
+\topmargin 2.54cm
+\rightmargin 2.54cm
+\bottommargin 2.54cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\noindent
+Arizona State University
+\begin_inset space \hfill{}
+\end_inset
+
+SER334: Operating Systems
+\end_layout
+
+\begin_layout Standard
+\noindent
+UGTA Lisonbee, Lecturer Acuña
+\begin_inset space \hfill{}
+\end_inset
+
+Revised 11/5/2019
+\end_layout
+
+\begin_layout Standard
+\noindent
+\begin_inset CommandInset line
+LatexCommand rule
+offset "0.5ex"
+width "100col%"
+height "1pt"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+
+\size huge
+Module 9: CPU Scheduling
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this group activity, we will continue to practice problem solving with
+ the ADJ approach.
+\size huge
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+As we're sure you've noticed, this document is written in Comic Sans.
+ For the advanced problem analyzer: How does it feel to read this document
+ written in Comic Sans? Are there any cognitive side effects?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Length: ~35 minutes
+\end_layout
+
+\begin_layout Section*
+
+\series bold
+\size larger
+Introduction
+\end_layout
+
+\begin_layout Standard
+As previously discussed, we use the following steps for solving a design
+ problem in SER334: Analysis, Design, and Justification.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Analysis: 
+\series default
+a translation of the original ill-defined problem into concrete requirements
+ that can be evaluated.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Design:
+\series default
+ a solution to the problem being solved.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Justification: 
+\series default
+an argument which supports your design as being superior to other potential
+ designs which also satisfy the analysis requirements.
+\end_layout
+
+\begin_layout Standard
+In previous activities, we focused on the base notion of the ADJ method,
+ as well as took a more focused look at the analysis stage and the notation
+ of K to represent knowledge.
+ This time, we will look at a single problem involving 
+\shape italic
+justification
+\shape default
+ for a given design choice.
+ For the time being, we neglect the design aspect of the ADJ method.
+ This is for a simple reason: design of a technical solution is the primary
+ aspect of most of the coursework you have already completed.
+\end_layout
+
+\begin_layout Section*
+
+\series bold
+\size larger
+K =
+\end_layout
+
+\begin_layout Standard
+(DON'T PANIC, EVERYTHING IS FINE.
+ YOU DON'T EVEN NEED THIS TO DO THE PROBLEM.
+ -RA)
+\end_layout
+
+\begin_layout Itemize
+Let the total process load of a system be defined as a set called 
+\begin_inset Formula $\mathbb{P}$
+\end_inset
+
+.
+ Let the next burst of each process 
+\begin_inset Formula $n$
+\end_inset
+
+ be represented as 
+\begin_inset Formula $P_{n}$
+\end_inset
+
+, an ordered pair of the form 
+\begin_inset Formula $(id,\,t)$
+\end_inset
+
+, where 
+\begin_inset Formula $id$
+\end_inset
+
+ is a identifier for a process and 
+\begin_inset Formula $t$
+\end_inset
+
+ is the burst time.
+ The constraints are that 
+\begin_inset Formula $id$
+\end_inset
+
+ is unique, and that 
+\begin_inset Formula $t>0$
+\end_inset
+
+.
+ As an example, consider a set of ordered pairs of processes and burst time:
+ 
+\begin_inset Formula $P=\{(P0,\;10),\;(P1,\;5),\;(P2,\;8)\}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Let 
+\begin_inset Formula $\mathbb{S}$
+\end_inset
+
+ be an ordered set that represents a schedule of bursts in 
+\begin_inset Formula $\mathbb{P}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Let the five scheduling criteria be called: 
+\emph on
+CPU utilization
+\emph default
+, 
+\emph on
+throughput
+\emph default
+, 
+\emph on
+turnaround time
+\emph default
+, 
+\emph on
+waiting time
+\emph default
+, and 
+\emph on
+response time
+\emph default
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+CPU utilization (
+\begin_inset Formula $cpu_{util}$
+\end_inset
+
+): At a given time 
+\begin_inset Formula $t$
+\end_inset
+
+ in a system, we say that
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Formula $cpu_{util}=\frac{cpu_{used}}{cpu_{capacity}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Throughput (
+\begin_inset Formula $throughout$
+\end_inset
+
+): For a given time interval 
+\emph on
+T
+\emph default
+, we say that 
+\emph on
+throughput
+\emph default
+ is the sum of the number of process bursts that complete within T.
+\end_layout
+
+\begin_layout Itemize
+Waiting time (
+\begin_inset Formula $time_{waiting}$
+\end_inset
+
+): For some 
+\begin_inset Formula $\mathbb{S}$
+\end_inset
+
+,
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\begin_inset Formula $time_{wait}=\Sigma_{p_{n}\in\mathbb{P}}\left(start(P_{n})\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $start(P_{n})$
+\end_inset
+
+ is the time at which a process starts in 
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+
+\begin_inset Formula $\mathbb{S}$
+\end_inset
+
+.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Just to cover myself: this definition is a little on the simple side and
+ won't quite work for round robin.
+ I'm leaving it simple just to illustrate stuff.
+ -RA
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Turnaround time (
+\begin_inset Formula $time_{turnaround}$
+\end_inset
+
+): For some 
+\begin_inset Formula $\mathbb{S}$
+\end_inset
+
+,
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ 
+\begin_inset Formula $time_{turnaround}=time_{waiting}\left(\mathbb{P}\right)+\Sigma_{(id,\,t)\in\mathbb{\mathbb{S}}}t$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Response time (
+\begin_inset Formula $time_{response}$
+\end_inset
+
+): For some 
+\begin_inset Formula $P_{n}$
+\end_inset
+
+, the time 
+\begin_inset Formula $t$
+\end_inset
+
+ at which the system produces a result for burst 
+\begin_inset Formula $P_{n}$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Section*
+Task 1 (5 minutes): Getting Started
+\end_layout
+
+\begin_layout Standard
+Start by forming a group of 
+\begin_inset Formula $6\pm1$
+\end_inset
+
+ people, and reading over this document.
+ Begin by discussing the prompt listed in the appendix, and at a high level
+ why you could argue that the given design prompt is correct.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Task 2 (15 minutes): Justifying a Design Choice
+\end_layout
+
+\begin_layout Standard
+See the appendix for the problem that you will be working with.
+ There is already work on the analysis and design, left for you is the task
+ of justifying the design against alternative options.
+\end_layout
+
+\begin_layout Standard
+Justifying this problem lends itself to 
+\emph on
+elimination
+\emph default
+ (see below) as a tool to justify the design choice.
+ Given the five criteria that you might optimize for, it would be helpful
+ to go through each and explain why or why not each criterion is or is not
+ the best design choice.
+\end_layout
+
+\begin_layout Standard
+Elimination is a simple problem solving tactic, or we might even call it
+ a 
+\series bold
+\emph on
+pattern
+\series default
+\emph default
+.
+ You have certainly seen it before - perhaps the only new idea is how it
+ is structured and written below.
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+And then perhaps we might ask ourselves: could we do this for other problem
+ solving techniques we know? Would it even be valuable to do such a thing?
+\end_layout
+
+\end_inset
+
+ For us, a pattern will mean a generic way to solve a problem, that is valid
+ for a certain context.
+ This may sound familiar - it is similar to the idea of design patterns
+ in software engineering.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+
+\series bold
+\bar under
+Elimination
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Context: 
+\series default
+Asked to make and support a choice from a set of options.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Requirements: 
+\series default
+Set of choices must be small and discrete.
+ Must have a metric to evaluate options, where results for that metric can
+ be ordered.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Methodology: 
+\series default
+Evaluate each option again metric.
+ Select one as optimal.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Justification:
+\series default
+ Follows immediately from metric producing an order, having a metric value
+ for each choice, and being able to order the choices based on the metric.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Related Patterns:
+\series default
+ Optimization (for continuous sets).
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Difficulty of Application:
+\series default
+ Low (requires only mechanical computation once metric is defined).
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Time to Apply:
+\series default
+ Long (requires brute force analysis of all possible alternatives).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Task 3 (15 minutes): Group Presentations
+\end_layout
+
+\begin_layout Standard
+All groups will be asked to provide a ~2 minute presentation on their justificat
+ion for the provided design.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $ $
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+
+\series bold
+Appendix: Analysis & Design for CPU scheduling
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+\bar under
+Problem Statement
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+Consider a render farm used to render animated scenes for various applications
+ (e.g.
+ physics simulations, movies, shows, etc.).
+ The owners of the render farm are primarily concerned with optimizing their
+ profit for a given render (charging the highest amount that's reasonable
+ while minimizing the actual computation time).
+\end_layout
+
+\begin_layout Standard
+Therefore, it is important to schedule the jobs in such a way that they
+ can maximize their profits.
+ Which of the five scheduling criteria is most important to optimize for
+ in this situation? Analyze the problem, design a choice, and 
+\series bold
+justify
+\series default
+ the choice.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+\bar under
+Analysis & Assumptions
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Analysis
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Since the render farm's primary goal is to maximize the profits from each
+ render, the renders must be ordered in a way that the customer receives
+ their final product in the least amount of time as possible.
+ Profit is a direct result of the amount the customer paid minus the server
+ cost (utilities, rent, misc.
+ overhead).
+ The amount the customer paid is not adjustable after the fact, therefore
+ the existing jobs in the queue must be done in a manner that provides the
+ minimum time (therefore power consumption & overhead cost) to get through
+ that job after being added to the queue.
+ In short, the time that a job finishes is the most sensitive criteria to
+ maximizing profits.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Assumptions:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+At a given instance, the render farm might have 5-10 renders in the queue
+ waiting for CPU time.
+\end_layout
+
+\begin_layout Itemize
+Approx.
+ job size is known ahead of time.
+\end_layout
+
+\begin_layout Itemize
+Job complexity isn't known ahead of time.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+\bar under
+The Goal
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+A potential 
+\emph on
+design
+\emph default
+ for this problem would be the potential criteria to schedule our jobs in
+ order to maximize profits.
+ Our choices are: 
+\shape italic
+CPU utilization, throughput, turnaround time, waiting time, and response
+ time
+\shape default
+.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+\bar under
+Design
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+After analyzing the jobs on the render farm, it was found that 
+\series bold
+turnaround time
+\series default
+ is the most important criteria to optimize for in this circumstance.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+\bar under
+Justification
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+(Your group's awesome answer here!)
+\end_layout
+
+\end_deeper
+\end_body
+\end_document
